@@ -14,7 +14,7 @@ export default function Home() {
         <p className="mb-4 text-gray-600">Find the best products at unbeatable prices!</p>
         <Link
           to="/products"
-          className="inline-block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+          className="inline-block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 active:scale-95 transition duration-50"
         >
           Shop Now
         </Link>

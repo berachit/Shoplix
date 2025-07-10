@@ -29,9 +29,9 @@ export default function Footer() {
           <p className="text-sm text-gray-400">Phone: +91 98765 43210</p>
           <div className="flex space-x-4 mt-3">
             {/* Replace with real icons if needed */}
-            <a href="#" className="text-gray-400 hover:text-white">Facebook</a>
-            <a href="#" className="text-gray-400 hover:text-white">Instagram</a>
-            <a href="#" className="text-gray-400 hover:text-white">Twitter</a>
+            <a href="https://facebook.com" target="_blank" className="text-gray-400 hover:text-white">Facebook</a>
+            <a href="https://instagram.com" target="_blank" className="text-gray-400 hover:text-white">Instagram</a>
+            <a href="https://x.com" target="_blank" className="text-gray-400 hover:text-white">Twitter</a>
           </div>
         </div>
       </div>
