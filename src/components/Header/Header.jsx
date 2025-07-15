@@ -4,6 +4,7 @@ import { logout } from "../../contexts/userSlice";
 
 export default function Header() {
   const status = useSelector((state) => state.user.status);
+  const cartCount = useSelector((state) => state.cart.cartItems.length) 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -16,7 +17,7 @@ export default function Header() {
     isActive ? "text-blue-600 font-semibold" : "hover:text-blue-600";
 
   return (
-    <nav className="bg-white shadow sticky top-0 z-50">
+    <nav className="bg-white shadow fixed top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="text-2xl font-bold text-blue-600">
           ShopKart
@@ -35,7 +36,7 @@ export default function Header() {
           </li>
           <li>
             <NavLink to="/cart" className={navLinkClass}>
-              Cart
+                Cart {cartCount > 0 && <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-1">{cartCount}</span>}
             </NavLink>
           </li>
         </ul>

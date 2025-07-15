@@ -1,15 +1,22 @@
 // src/components/ProductCard.jsx
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../contexts/cartSlice";
 
 export default function ProductCard({ product }) {
+
   const status = useSelector((state) => state.user.status)
+  const dispatch = useDispatch()
   const inrPrice = (product.price * 80).toFixed(0);
+  const navigate = useNavigate()
 
   const addToCartHandler = () => {
     if(!status){
       alert("Login First!!")
+      navigate("/login")
+    } else{
+      dispatch(addToCart(product))
     }
   }
 
