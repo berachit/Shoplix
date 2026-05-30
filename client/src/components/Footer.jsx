@@ -39,7 +39,7 @@ export function Footer() {
       <div className="border-t hairline">
         <div className="container-px mx-auto max-w-7xl py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} Shoplix Studio. All rights reserved.</span>
-          <span>Designed with intent · Made in Europe</span>
+          <span>Made in India</span>
         </div>
       </div>
     </footer>
