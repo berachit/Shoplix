@@ -7,7 +7,7 @@ export function Footer() {
         <div className="md:col-span-5">
           <div className="font-display text-3xl">Shoplix<span className="text-accent">.</span></div>
           <p className="mt-4 max-w-sm text-sm text-muted-foreground leading-relaxed">
-            A modern atelier for everyday essentials. Designed in-house, made in small runs across Europe.
+            A modern atelier for everyday essentials. Designed in-house, made in small runs across India.
           </p>
           <form className="mt-8 flex max-w-sm rounded-full border hairline overflow-hidden bg-surface" onSubmit={e => e.preventDefault()}>
             <input

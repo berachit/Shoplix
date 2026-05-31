@@ -66,7 +66,7 @@ export default function AdminProductNew() {
         <aside className="space-y-6">
           <div className="rounded-2xl border hairline p-6 bg-surface space-y-4">
             <h2 className="font-display text-xl">Pricing</h2>
-            <Field label="Price (USD)" type="number" placeholder="489" required />
+            <Field label="Price (INR)" type="number" placeholder="489" required />
             <Field label="Compare at" type="number" placeholder="590" />
           </div>
           <div className="rounded-2xl border hairline p-6 bg-surface space-y-4">

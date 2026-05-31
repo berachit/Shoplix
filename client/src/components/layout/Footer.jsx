@@ -20,7 +20,7 @@ export default function Footer() {
             Shoplix<span style={{ color: 'var(--accent)' }}>.</span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed" style={{ color: 'var(--muted-foreground)' }}>
-            A modern atelier for everyday essentials. Designed in-house, made in small runs across Europe.
+            A modern atelier for everyday essentials. Designed in-house, made in small runs across India.
           </p>
 
           {/* Newsletter */}

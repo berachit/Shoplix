@@ -1,43 +1,59 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        required: true,
-        trim: true
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    email:{
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        // match:[/.+\@.+\..+/, "Please enter a valid email address"]
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      // match:[/.+\@.+\..+/, "Please enter a valid email address"]
     },
-    password:{
-        type: String,
-        required: true,
-        // minLength: 6
+    password: {
+      type: String,
+      required: true,
+      // minLength: 6
     },
     cartData: {
-        type: Map,
-        default: {}
+      type: Map,
+      default: {},
     },
-    role:{
-        type: String,
-        enum: ["customer","admin"],
-        default:"customer"
+    role: {
+      type: String,
+      enum: ["customer", "admin"],
+      default: "customer",
     },
-},{
+    googleId: {
+      type: String,
+      default: null,
+    },
+    authProvider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
+    passwordResetToken:{
+      type: String,
+    },
+    passwordResetExpires:{
+      type: Date,
+    }
+  },
+  {
     timestamps: true,
     minimize: false,
     // minimize is like do not remove empty objects while saving
-})
+  },
+);
 
-export const User =
-  mongoose.models.User ||
-  mongoose.model("User", userSchema)
+export const User = mongoose.models.User || mongoose.model("User", userSchema);
 
-// // before saving the password in the db it hashes the password 
+// // before saving the password in the db it hashes the password
 // userSchema.pre("save", async function (next) {
 //     if (!this.isModified("password")) return next()
 

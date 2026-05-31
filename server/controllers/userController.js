@@ -30,7 +30,16 @@ export const loginUser = async (req, res) => {
 
     if (isMatch) {
       const token = createToken(user);
-      res.json({ success: true, token , role: user.role});
+      res.json({
+        success: true,
+        token,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
     } else {
       res.json({ success: false, message: "Password Incorrect!" });
     }
@@ -79,7 +88,16 @@ export const registerUser = async (req, res) => {
 
     const token = createToken(user);
 
-    res.json({ success: true, token });
+    res.json({
+      success: true,
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });

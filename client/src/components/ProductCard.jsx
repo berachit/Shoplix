@@ -16,7 +16,11 @@ export function ProductCard({ product, index = 0 }) {
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.04,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       className="group"
@@ -24,14 +28,16 @@ export function ProductCard({ product, index = 0 }) {
       <Link to={`/product/${product.slug}`} className="block">
         <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
           <motion.img
-            src={product.images[0]} alt={product.name}
+            src={product.images[0]}
+            alt={product.name}
             className="h-full w-full object-cover"
             animate={{ scale: hover ? 1.06 : 1 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             loading="lazy"
           />
           <motion.img
-            src={product.images[1] ?? product.images[0]} alt=""
+            src={product.images[1] ?? product.images[0]}
+            alt=""
             className="absolute inset-0 h-full w-full object-cover"
             initial={false}
             animate={{ opacity: hover ? 1 : 0 }}
@@ -43,11 +49,16 @@ export function ProductCard({ product, index = 0 }) {
             </span>
           )}
           <button
-            onClick={(e) => { e.preventDefault(); toggleWish(product.id); }}
+            onClick={(e) => {
+              e.preventDefault();
+              toggleWish(product.id);
+            }}
             className="absolute top-3 right-3 p-2 rounded-full bg-surface/90 backdrop-blur hover:bg-surface transition"
             aria-label="Wishlist"
           >
-            <Heart className={`size-4 transition ${wished ? "fill-accent text-accent" : ""}`} />
+            <Heart
+              className={`size-4 transition ${wished ? "fill-accent text-accent" : ""}`}
+            />
           </button>
           <motion.div
             initial={false}
@@ -69,13 +80,21 @@ export function ProductCard({ product, index = 0 }) {
         </div>
         <div className="mt-4 flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{product.brand}</div>
-            <div className="mt-1 text-sm font-medium truncate">{product.name}</div>
+            <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              {product.brand}
+            </div>
+            <div className="mt-1 text-sm font-medium truncate">
+              {product.name}
+            </div>
           </div>
           <div className="text-right">
-            <div className="text-sm font-medium">{formatPrice(product.price)}</div>
+            <div className="text-sm font-medium">
+              {formatPrice(product.price)}
+            </div>
             {product.compareAt && (
-              <div className="text-xs text-muted-foreground line-through">{formatPrice(product.compareAt)}</div>
+              <div className="text-xs text-muted-foreground line-through">
+                {formatPrice(product.compareAt)}
+              </div>
             )}
           </div>
         </div>

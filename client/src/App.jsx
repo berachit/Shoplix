@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "sonner";
 import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import Home from "./pages/Home";
@@ -17,6 +19,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminProductNew from "./pages/admin/AdminProductNew";
 import AdminOrders from "./pages/admin/AdminOrders";
+import AdminLogin from "./pages/admin/AdminLogin";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -37,28 +40,58 @@ function AnimatedRoutes() {
             <Route path="/" element={<Home />} />
             <Route path="/collections" element={<Collections />} />
             <Route path="/product/:slug" element={<ProductPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<Checkout />} />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <CartPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute>
+                  <Checkout />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/login" element={<Login />} />
-            <Route path="/orders" element={<Orders />} />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <Orders />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="products/new" element={<AdminProductNew />} />
               <Route path="orders" element={<AdminOrders />} />
             </Route>
-            <Route path="*" element={
-              <div className="flex min-h-[70vh] items-center justify-center container-px">
-                <div className="text-center max-w-md">
-                  <div className="font-display text-7xl">404</div>
-                  <p className="mt-3 text-muted-foreground">This page took a different route.</p>
-                  <a href="/" className="mt-8 inline-flex items-center px-5 py-2.5 rounded-full bg-foreground text-background text-sm hover:bg-accent hover:text-accent-foreground transition">
-                    Back to home
-                  </a>
+            <Route
+              path="*"
+              element={
+                <div className="flex min-h-[70vh] items-center justify-center container-px">
+                  <div className="text-center max-w-md">
+                    <div className="font-display text-7xl">404</div>
+                    <p className="mt-3 text-muted-foreground">
+                      This page took a different route.
+                    </p>
+                    <a
+                      href="/"
+                      className="mt-8 inline-flex items-center px-5 py-2.5 rounded-full bg-foreground text-background text-sm hover:bg-accent hover:text-accent-foreground transition"
+                    >
+                      Back to home
+                    </a>
+                  </div>
                 </div>
-              </div>
-            } />
+              }
+            />
           </Routes>
         </motion.main>
       </AnimatePresence>
@@ -70,10 +103,15 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <CartProvider>
-        <AnimatedRoutes />
-        <Toaster position="bottom-right" toastOptions={{ style: { borderRadius: "12px" } }} />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <AnimatedRoutes />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{ style: { borderRadius: "12px" } }}
+          />
+        </CartProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
