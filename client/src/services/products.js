@@ -75,20 +75,6 @@ export const PRODUCTS = [
     ],
   },
   {
-    id: "p6", slug: "minimal-watch-noir",
-    name: "Minimal Watch — Noir", brand: "Shoplix Time",
-    price: 380, category: "Accessories", badge: "New",
-    colors: ["Noir", "Silver"], sizes: ["38mm", "42mm"],
-    rating: 4.9, reviews: 540,
-    description: "A 38mm automatic watch with a brushed steel case and a sapphire crystal.",
-    details: ["Sapphire crystal", "Automatic movement", "5 ATM water resistance"],
-    images: [
-      img("1523275335684-37898b6baf30"),
-      img("1524805444758-089113d48a6d"),
-      img("1547996160-81dfa63595aa"),
-    ],
-  },
-  {
     id: "p7", slug: "weekender-canvas",
     name: "Weekender — Waxed Canvas", brand: "Shoplix",
     price: 195, category: "Bags",
@@ -109,7 +95,7 @@ export const PRODUCTS = [
     colors: ["Sand", "Ink", "Olive"], sizes: ["S", "M", "L", "XL"],
     rating: 4.6, reviews: 164,
     description: "A relaxed linen overshirt with a clean placket and a single chest pocket.",
-    details: ["100% European linen", "Mother-of-pearl buttons"],
+    details: ["100% Indian linen", "Mother-of-pearl buttons"],
     images: [
       img("1602810318383-e386cc2a3ccf"),
       img("1490114538077-0a7f8cb49891"),
@@ -127,5 +113,4 @@ export const CATEGORIES = [
   { name: "Footwear", count: 36, image: img("1542291026-7eec264c27ff", 800, 1000) },
   { name: "Knitwear", count: 18, image: img("1620799140408-edc6dcb6d633", 800, 1000) },
   { name: "Bags", count: 22, image: img("1584917865442-de89df76afd3", 800, 1000) },
-  { name: "Accessories", count: 41, image: img("1523275335684-37898b6baf30", 800, 1000) },
 ];
