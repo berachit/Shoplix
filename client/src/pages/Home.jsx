@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { ProductCard } from "../components/ProductCard";
-import { PRODUCTS, CATEGORIES } from "../services/products";
+import { CATEGORIES } from "../services/products";
+import { listProducts } from "../utils/api";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -12,8 +14,25 @@ const fadeUp = {
 };
 
 export default function Home() {
-  const featured = PRODUCTS.slice(0, 4);
-  const trending = PRODUCTS.slice(2, 8);
+  const [products, setProducts] = useState([]);
+  const [loading,  setLoading]  = useState(true);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const { data } = await listProducts({ sort: "newest", limit: 8 });
+        if (data.success) setProducts(data.products);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetch();
+  }, []);
+
+  const featured = products.slice(0, 4);
+  const trending  = products.slice(4, 8);
 
   return (
     <div>
@@ -66,7 +85,7 @@ export default function Home() {
           {[
             ["Free shipping", "On orders over $200"],
             ["30-day returns", "No questions asked"],
-            ["Made in Europe", "Small batch production"],
+            ["Made in India", "Small batch production"],
             ["Lifetime repairs", "On all leather goods"],
           ].map(([t, s]) => (
             <div key={t}>
@@ -122,9 +141,21 @@ export default function Home() {
             <h2 className="font-display text-4xl md:text-5xl mt-2">This week's edit</h2>
           </div>
         </motion.div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-10">
-          {featured.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-        </div>
+        {loading ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-10">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="aspect-[4/5] rounded-2xl bg-muted" />
+                <div className="mt-4 h-3 w-2/3 rounded bg-muted" />
+                <div className="mt-2 h-3 w-1/3 rounded bg-muted" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-10">
+            {featured.map((p, i) => <ProductCard key={p._id} product={p} index={i} />)}
+          </div>
+        )}
       </section>
 
       {/* PROMO BANNER */}
@@ -161,7 +192,7 @@ export default function Home() {
         <div className="-mx-4 md:-mx-6 overflow-x-auto no-scrollbar">
           <div className="flex gap-4 md:gap-6 px-4 md:px-6 snap-x snap-mandatory">
             {trending.map((p, i) => (
-              <div key={p.id} className="snap-start shrink-0 w-[78%] sm:w-[44%] md:w-[32%] lg:w-[24%]">
+              <div key={p._id} className="snap-start shrink-0 w-[78%] sm:w-[44%] md:w-[32%] lg:w-[24%]">
                 <ProductCard product={p} index={i} />
               </div>
             ))}

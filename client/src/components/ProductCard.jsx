@@ -9,7 +9,7 @@ import { formatPrice } from "../utils/format";
 export function ProductCard({ product, index = 0 }) {
   const { add, toggleWish, wishlist } = useCart();
   const [hover, setHover] = useState(false);
-  const wished = wishlist.includes(product.id);
+  const wished = wishlist.includes(product._id);
 
   return (
     <motion.div
@@ -25,10 +25,10 @@ export function ProductCard({ product, index = 0 }) {
       onMouseLeave={() => setHover(false)}
       className="group"
     >
-      <Link to={`/product/${product.slug}`} className="block">
+      <Link to={`/product/${product._id}`} className="block">
         <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
           <motion.img
-            src={product.images[0]}
+            src={product.image?.[0]?.url ?? product.images?.[0]}
             alt={product.name}
             className="h-full w-full object-cover"
             animate={{ scale: hover ? 1.06 : 1 }}
@@ -36,7 +36,7 @@ export function ProductCard({ product, index = 0 }) {
             loading="lazy"
           />
           <motion.img
-            src={product.images[1] ?? product.images[0]}
+            src={product.image?.[1]?.url ?? product.image?.[0]?.url ?? product.images?.[1] ?? product.images?.[0]}
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
             initial={false}
@@ -51,7 +51,7 @@ export function ProductCard({ product, index = 0 }) {
           <button
             onClick={(e) => {
               e.preventDefault();
-              toggleWish(product.id);
+              toggleWish(product._id);
             }}
             className="absolute top-3 right-3 p-2 rounded-full bg-surface/90 backdrop-blur hover:bg-surface transition"
             aria-label="Wishlist"
@@ -81,7 +81,7 @@ export function ProductCard({ product, index = 0 }) {
         <div className="mt-4 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              {product.brand}
+              {product.brand ?? product.subCategory}
             </div>
             <div className="mt-1 text-sm font-medium truncate">
               {product.name}

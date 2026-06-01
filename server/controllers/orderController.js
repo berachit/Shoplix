@@ -6,7 +6,20 @@ import { orderMail } from "../utils/sendMail.js";
 export const placeOrder = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { address, paymentMethod } = req.body;
+    const { address = {}, items = [], amount, paymentMethod } = req.body;
+    const normalizedAddress = {
+      ...address,
+      addressLine1: address.addressLine1 || address.street,
+      addressLine2: address.addressLine2 || "",
+      state: address.state || address.city,
+      pinCode: Number(address.pinCode || address.zipCode),
+    };
+    const normalizedPaymentMethod =
+      {
+        card: "Stripe",
+        upi: "Razorpay",
+        cod: "COD",
+      }[paymentMethod] || paymentMethod;
 
     const user = await User.findById(userId);
 
@@ -18,8 +31,10 @@ export const placeOrder = async (req, res) => {
     }
 
     const cartData = user.cartData;
+    const hasCartItems = cartData.size > 0;
+    const hasSubmittedItems = Array.isArray(items) && items.length > 0;
 
-    if (cartData.size === 0) {
+    if (!hasCartItems && !hasSubmittedItems) {
       return res.json({ success: false, message: "Cart is Empty!" });
     }
 
@@ -27,38 +42,54 @@ export const placeOrder = async (req, res) => {
 
     let totalAmount = 0;
 
-    for (const [productId, quantity] of cartData) {
-      const product = await Product.findById(productId);
-      if (!product) {
-        return res.json({
-          success: false,
-          message: `Product not available: ${productId}`,
+    if (hasCartItems) {
+      for (const [productId, quantity] of cartData) {
+        const product = await Product.findById(productId);
+        if (!product) {
+          return res.json({
+            success: false,
+            message: `Product not available: ${productId}`,
+          });
+        }
+        const item = {
+          productId: product._id,
+          name: product.name,
+          price: product.price,
+          quantity,
+          image: product.image[0]?.url || "",
+          size: "", //////////////////
+        };
+        orderItems.push(item);
+        totalAmount += product.price * quantity;
+      }
+    } else {
+      for (const item of items) {
+        orderItems.push({
+          productId: item.productId,
+          name: item.name,
+          price: Number(item.price),
+          quantity: Number(item.quantity),
+          image: item.image || "",
+          size: item.size || "",
         });
       }
-      const item = {
-        productId: product._id,
-        name: product.name,
-        price: product.price,
-        quantity,
-        image: product.image[0]?.url || "",
-        size: "", //////////////////
-      };
-      orderItems.push(item);
-      totalAmount += product.price * quantity;
+      totalAmount =
+        Number(amount) ||
+        orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     }
 
     const newOrder = new Order({
       userId,
       items: orderItems,
       amount: totalAmount,
-      address,
-      paymentMethod,
+      address: normalizedAddress,
+      paymentMethod: normalizedPaymentMethod,
     });
 
     
     await newOrder.save();
     
-    await orderMail(address.email, newOrder)
+    await orderMail(normalizedAddress.email, newOrder)
     
     user.cartData = new Map();
 

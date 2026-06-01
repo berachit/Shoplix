@@ -45,16 +45,16 @@ export default function CartPage() {
                 transition={{ duration: 0.3 }}
                 className="flex gap-5 py-6"
               >
-                <Link to={`/product/${it.product.slug}`} className="shrink-0">
+                <Link to={`/product/${it.product._id}`} className="shrink-0">
                   <div className="size-28 sm:size-36 rounded-2xl overflow-hidden bg-muted">
-                    <img src={it.product.images[0]} alt={it.product.name} className="h-full w-full object-cover" />
+                    <img src={it.product.image?.[0]?.url ?? it.product.images?.[0]} alt={it.product.name} className="h-full w-full object-cover" />
                   </div>
                 </Link>
                 <div className="flex-1 min-w-0 flex flex-col">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{it.product.brand}</div>
-                      <Link to={`/product/${it.product.slug}`} className="text-base font-medium hover:text-accent transition truncate block">
+                      <Link to={`/product/${it.product._id}`} className="text-base font-medium hover:text-accent transition truncate block">
                         {it.product.name}
                       </Link>
                       <div className="text-xs text-muted-foreground mt-1">{it.color} · Size {it.size}</div>

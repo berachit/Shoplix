@@ -43,7 +43,7 @@ const RELATED = [
   { _id: '3', name: 'Structured Leather Tote', price: 320, category: 'Bags', subCategory: 'Shoplix Studio', sizes: ['One Size'], image: [{ url: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&h=1000&fit=crop&q=80', public_id: '3' }] },
   { _id: '4', name: 'Ribbed Cashmere Crew', price: 220, category: 'Knitwear', subCategory: 'Shoplix', badge: 'Limited', sizes: ['XS','S','M','L','XL'], image: [{ url: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=80', public_id: '4' }] },
   { _id: '5', name: 'Pleated Wool Trouser', price: 245, category: 'Outerwear', subCategory: 'Shoplix Studio', sizes: ['28','30','32','34'], image: [{ url: 'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=800&h=1000&fit=crop&q=80', public_id: '5' }] },
-  { _id: '6', name: 'Minimal Watch — Noir', price: 380, category: 'Accessories', subCategory: 'Shoplix Time', badge: 'New', sizes: ['One Size'], image: [{ url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=1000&fit=crop&q=80', public_id: '6' }] },
+  { _id: '6', name: 'Weekender — Waxed Canvas', price: 195, category: 'Bags', subCategory: 'Shoplix', sizes: ['One Size'], image: [{ url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=1000&fit=crop&q=80', public_id: '6' }] },
 ]
 
 function Accordion({ title, children }) {

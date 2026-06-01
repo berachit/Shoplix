@@ -20,7 +20,6 @@ const NAV = [
   { label: "Outerwear", to: "/collections?c=Outerwear" },
   { label: "Footwear", to: "/collections?c=Footwear" },
   { label: "Bags", to: "/collections?c=Bags" },
-  { label: "Accessories", to: "/collections?c=Accessories" },
 ];
 
 export function Navbar() {
@@ -44,9 +43,12 @@ export function Navbar() {
 
   // Close all menus on route change
   useEffect(() => {
-    setMenuOpen(false);
-    setSearchOpen(false);
-    setUserMenuOpen(false);
+    const id = window.setTimeout(() => {
+      setMenuOpen(false);
+      setSearchOpen(false);
+      setUserMenuOpen(false);
+    }, 0);
+    return () => window.clearTimeout(id);
   }, [pathname]);
 
   // Close user dropdown when clicking outside
@@ -179,31 +181,37 @@ export function Navbar() {
               </Link>
             )}
 
-            <Link
-              to="/cart"
-              className="p-2 rounded-lg hover:bg-muted transition hidden sm:inline-flex"
-            >
-              <Heart className="size-[18px]" />
-            </Link>
-            <Link
-              to="/cart"
-              className="relative p-2 rounded-lg hover:bg-muted transition"
-            >
-              <ShoppingBag className="size-[18px]" />
-              <AnimatePresence>
-                {count > 0 && (
-                  <motion.span
-                    key={count}
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.5, opacity: 0 }}
-                    className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accent text-accent-foreground text-[10px] font-medium flex items-center justify-center"
-                  >
-                    {count}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Link>
+            {isAuthenticated && (
+              <>
+                <Link
+                  to="/wishlist"
+                  className="p-2 rounded-lg hover:bg-muted transition hidden sm:inline-flex"
+                  aria-label="Wishlist"
+                >
+                  <Heart className="size-[18px]" />
+                </Link>
+                <Link
+                  to="/cart"
+                  className="relative p-2 rounded-lg hover:bg-muted transition"
+                  aria-label="Cart"
+                >
+                  <ShoppingBag className="size-[18px]" />
+                  <AnimatePresence>
+                    {count > 0 && (
+                      <motion.span
+                        key={count}
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.5, opacity: 0 }}
+                        className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accent text-accent-foreground text-[10px] font-medium flex items-center justify-center"
+                      >
+                        {count}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+              </>
+            )}
           </div>
         </div>
 

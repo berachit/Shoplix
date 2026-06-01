@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { User } from "../models/userModel.js";
+import { verifyGoogleToken } from "../services/googleAuth.service.js";
 
 const createToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
@@ -10,7 +11,12 @@ const createToken = (user) => {
 
 export const googleAuth = async (req, res) => {
   try {
-    const { sub, email, name, picture, email_verified } = req.body;
+    const payload =
+      typeof req.body.token === "string"
+        ? await verifyGoogleToken(req.body.token)
+        : req.body;
+
+    const { sub, email, name, picture, email_verified } = payload;
 
     if (!email || !sub) {
       return res.json({ success: false, message: "Invalid Google user data" });

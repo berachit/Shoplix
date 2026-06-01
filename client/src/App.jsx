@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "sonner";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -20,6 +21,7 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminProductNew from "./pages/admin/AdminProductNew";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminLogin from "./pages/admin/AdminLogin";
+import Wishlist from "./pages/Wishlist";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -39,7 +41,15 @@ function AnimatedRoutes() {
           <Routes location={location}>
             <Route path="/" element={<Home />} />
             <Route path="/collections" element={<Collections />} />
-            <Route path="/product/:slug" element={<ProductPage />} />
+            <Route path="/product/:id" element={<ProductPage />} />
+            <Route
+              path="/wishlist"
+              element={
+                <ProtectedRoute>
+                  <Wishlist />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/cart"
               element={
@@ -102,16 +112,18 @@ function AnimatedRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
-          <AnimatedRoutes />
-          <Toaster
-            position="bottom-right"
-            toastOptions={{ style: { borderRadius: "12px" } }}
-          />
-        </CartProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <BrowserRouter>
+        <AuthProvider>
+          <CartProvider>
+            <AnimatedRoutes />
+            <Toaster
+              position="bottom-right"
+              toastOptions={{ style: { borderRadius: "12px" } }}
+            />
+          </CartProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }

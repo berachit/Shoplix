@@ -1,12 +1,48 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { Search, Plus, MoreHorizontal } from "lucide-react";
-import { PRODUCTS } from "../../services/products";
+import { useCallback, useEffect, useState } from "react";
+import { Search, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { deleteProduct, listProducts } from "../../utils/api";
 import { formatPrice } from "../../utils/format";
 
 export default function AdminProducts() {
   const [q, setQ] = useState("");
-  const list = PRODUCTS.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()));
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadProducts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data } = await listProducts({ keyword: q, limit: 1000, sort: "newest" });
+      if (data.success) setProducts(data.products);
+      else toast.error(data.message);
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to load products");
+    } finally {
+      setLoading(false);
+    }
+  }, [q]);
+
+  useEffect(() => {
+    const timer = setTimeout(loadProducts, 250);
+    return () => clearTimeout(timer);
+  }, [loadProducts]);
+
+  const handleDelete = async (productId) => {
+    try {
+      const { data } = await deleteProduct(productId);
+      if (data.success) {
+        setProducts((prev) => prev.filter((product) => product._id !== productId));
+        toast.success("Product removed");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to remove product");
+    }
+  };
 
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto">
@@ -38,16 +74,30 @@ export default function AdminProducts() {
             </tr>
           </thead>
           <tbody>
-            {list.map((p) => (
-              <tr key={p.id} className="border-b hairline last:border-0 hover:bg-muted/40 transition">
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <tr key={i} className="border-b hairline">
+                  <td className="py-4 px-6" colSpan={5}>
+                    <div className="h-12 rounded bg-muted animate-pulse" />
+                  </td>
+                </tr>
+              ))
+            ) : products.length === 0 ? (
+              <tr>
+                <td className="py-12 px-6 text-center text-muted-foreground" colSpan={5}>
+                  No products found.
+                </td>
+              </tr>
+            ) : products.map((p) => (
+              <tr key={p._id} className="border-b hairline last:border-0 hover:bg-muted/40 transition">
                 <td className="py-3 px-6">
                   <div className="flex items-center gap-3">
                     <div className="size-12 rounded-lg overflow-hidden bg-muted">
-                      <img src={p.images[0]} alt="" className="h-full w-full object-cover" />
+                      <img src={p.image?.[0]?.url} alt="" className="h-full w-full object-cover" />
                     </div>
                     <div>
                       <div className="font-medium">{p.name}</div>
-                      <div className="text-xs text-muted-foreground">{p.brand}</div>
+                      <div className="text-xs text-muted-foreground">{p.subCategory}</div>
                     </div>
                   </div>
                 </td>
@@ -59,7 +109,13 @@ export default function AdminProducts() {
                 </td>
                 <td className="py-3 font-medium">{formatPrice(p.price)}</td>
                 <td className="py-3 px-6 text-right">
-                  <button className="p-1.5 rounded-md hover:bg-muted"><MoreHorizontal className="size-4" /></button>
+                  <button
+                    onClick={() => handleDelete(p._id)}
+                    className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-destructive"
+                    aria-label="Delete product"
+                  >
+                    <Trash2 className="size-4" />
+                  </button>
                 </td>
               </tr>
             ))}

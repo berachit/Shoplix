@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-const SHOP_LINKS = ['New', 'Outerwear', 'Footwear', 'Bags', 'Knitwear', 'Accessories']
+const SHOP_LINKS = ['New', 'Outerwear', 'Footwear', 'Bags', 'Knitwear']
 const CARE_LINKS = ['Orders', 'Returns', 'Shipping', 'Contact']
 const STUDIO_LINKS = ['About', 'Sustainability', 'Press', 'Stockists']
 

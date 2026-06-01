@@ -9,7 +9,6 @@ const NAV_LINKS = [
   { label: 'Outerwear', to: '/collections?category=Outerwear' },
   { label: 'Footwear', to: '/collections?category=Footwear' },
   { label: 'Bags', to: '/collections?category=Bags' },
-  { label: 'Accessories', to: '/collections?category=Accessories' },
 ]
 
 export default function Navbar() {
@@ -30,9 +29,12 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    setMobileOpen(false)
-    setSearchOpen(false)
-    setUserMenuOpen(false)
+    const id = window.setTimeout(() => {
+      setMobileOpen(false)
+      setSearchOpen(false)
+      setUserMenuOpen(false)
+    }, 0)
+    return () => window.clearTimeout(id)
   }, [location.pathname])
 
   // Lock body scroll when mobile menu open

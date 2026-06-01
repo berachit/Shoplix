@@ -1,36 +1,39 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+const readStoredAuth = () => {
+  try {
+    const storedToken = localStorage.getItem("shoplix_token");
+    const storedUser = localStorage.getItem("shoplix_user");
 
-  // Define logout first so useEffect can call it on error
+    if (storedToken && storedUser) {
+      return {
+        token: storedToken,
+        user: JSON.parse(storedUser),
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    localStorage.removeItem("shoplix_token");
+    localStorage.removeItem("shoplix_user");
+  }
+
+  return { token: null, user: null };
+};
+
+export function AuthProvider({ children }) {
+  const [storedAuth] = useState(readStoredAuth);
+  const [user, setUser] = useState(storedAuth.user);
+  const [token, setToken] = useState(storedAuth.token);
+  const loading = false;
+
   const logout = () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("shoplix_token");
     localStorage.removeItem("shoplix_user");
   };
-
-  useEffect(() => {
-    try {
-      const storedToken = localStorage.getItem("shoplix_token");
-      const storedUser = localStorage.getItem("shoplix_user");
-
-      if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (error) {
-      console.error(error);
-      logout(); // safe: logout is defined above
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   const login = (userData, authToken) => {
     setUser(userData);

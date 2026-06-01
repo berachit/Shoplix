@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Eye, EyeOff, ShieldCheck, ArrowLeft } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
+import { loginUser } from '../../utils/api'
 
 export default function AdminLogin() {
   const [form, setForm] = useState({ email: '', password: '' })
@@ -17,13 +18,16 @@ export default function AdminLogin() {
     setError('')
     setLoading(true)
     try {
-      await new Promise((r) => setTimeout(r, 900))
-      if (form.email === 'admin@shoplix.com' && form.password === 'shoplix1234') {
-        login({ name: 'Admin', email: form.email, role: 'admin' }, 'admin-demo-token')
+      const { data } = await loginUser(form)
+
+      if (data.success && data.user?.role === 'admin') {
+        login(data.user, data.token)
         navigate('/admin')
       } else {
-        setError('Invalid credentials. Please try again.')
+        setError(data.message || 'Admin access required.')
       }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Unable to sign in.')
     } finally {
       setLoading(false)
     }

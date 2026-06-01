@@ -1,22 +1,33 @@
 import { useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
-import { useMemo } from "react";
+import { useState, useEffect } from "react";
 import { ProductCard } from "../components/ProductCard";
-import { PRODUCTS } from "../services/products";
+import { listProducts } from "../utils/api";
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get("q") || "";
 
-  const results = useMemo(() => {
-    if (!q.trim()) return [];
-    const t = q.toLowerCase();
-    return PRODUCTS.filter(
-      (p) =>
-        p.name.toLowerCase().includes(t) ||
-        p.brand.toLowerCase().includes(t) ||
-        p.category.toLowerCase().includes(t),
-    );
+  const [results,  setResults]  = useState([]);
+  const [loading,  setLoading]  = useState(false);
+
+  useEffect(() => {
+    if (!q.trim()) {
+      const timer = setTimeout(() => setResults([]), 0);
+      return () => clearTimeout(timer);
+    }
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const { data } = await listProducts({ keyword: q.trim() });
+        if (data.success) setResults(data.products);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }, 350);
+    return () => clearTimeout(timer);
   }, [q]);
 
   const setQ = (val) => {
@@ -42,12 +53,28 @@ export default function SearchPage() {
       </div>
 
       <div className="mt-6 text-sm text-muted-foreground">
-        {q.trim() ? `${results.length} result${results.length === 1 ? "" : "s"} for "${q}"` : "Start typing to search."}
+        {loading
+          ? "Searching…"
+          : q.trim()
+            ? `${results.length} result${results.length === 1 ? "" : "s"} for "${q}"`
+            : "Start typing to search."}
       </div>
 
-      <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-12">
-        {results.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-      </div>
+      {loading ? (
+        <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-12">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="aspect-[4/5] rounded-2xl bg-muted" />
+              <div className="mt-4 h-3 w-2/3 rounded bg-muted" />
+              <div className="mt-2 h-3 w-1/3 rounded bg-muted" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-12">
+          {results.map((p, i) => <ProductCard key={p._id} product={p} index={i} />)}
+        </div>
+      )}
     </div>
   );
 }

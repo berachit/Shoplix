@@ -4,55 +4,52 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-// this block of code is executed before every request is sent
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("shoplix_token");
   if (token) {
-    // Your backend middleware reads req.headers.token (not Authorization: Bearer)
     config.headers.token = token;
   }
   return config;
 });
 
-// User API ->
 export const registerUser = (data) => {
   return api.post("/api/user/register", data);
 };
-
 export const loginUser = (data) => {
   return api.post("/api/user/login", data);
 };
+export const googleAuthLogin = (data) => {
+  return api.post("/api/user/google", data);
+};
+
+export const listProducts = (params) => {
+  return api.get("/api/product/listAll", { params });
+};
+export const listOne = (productId) => {
+  return api.get(`/api/product/listOne/${productId}`);
+};
+export const addProduct = (data) => {
+  return api.post("/api/product/add", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+export const deleteProduct = (productId) =>
+  api.post(`/api/product/delete/${productId}`);
+
+export const getCart = () => api.get("/api/cart/get");
+export const addToCartApi = (productId) =>
+  api.post("/api/cart/add", { productId });
+export const updateCartApi = (productId, quantity) =>
+  api.post("/api/cart/update", { productId, quantity });
+export const removeFromCartApi = (productId) =>
+  api.post("/api/cart/remove", { productId });
+export const placeOrder = (data) => api.post("/api/order/placeOrder", data);
+export const getUserOrders = () => api.get("/api/order/userOrders");
+
+export const listAllOrders = () => api.get("/api/order/listOrders");
+export const updateOrderStatus = (orderId, status) =>
+  api.post("/api/order/updateStatus", { orderId, status });
 
 export default api;
-
-// // ─── User API ───────────────────────────────────────
-// export const userAPI = {
-//   register: (data) => api.post('/api/user/register', data),
-//   login: (data) => api.post('/api/user/login', data),
-// }
-
-// // ─── Product API ─────────────────────────────────────
-// export const productAPI = {
-//   list: (params) => api.get('/api/product/list', { params }),
-//   getOne: (productId) => api.get(`/api/product/listOne/${productId}`),
-//   add: (data) => api.post('/api/product/add', data, {
-//     headers: { 'Content-Type': 'multipart/form-data' }
-//   }),
-//   delete: (data) => api.post('/api/product/delete', data),
-// }
-
-// // ─── Cart API ────────────────────────────────────────
-// export const cartAPI = {
-//   get: () => api.get('/api/cart/get'),
-//   add: (data) => api.post('/api/cart/add', data),
-//   update: (data) => api.post('/api/cart/update', data),
-//   remove: (data) => api.post('/api/cart/remove', data),
-// }
-
-// // ─── Order API ───────────────────────────────────────
-// export const orderAPI = {
-//   place: (data) => api.post('/api/order/placeOrder', data),
-//   userOrders: () => api.get('/api/order/userOrders'),
-//   listAll: () => api.get('/api/order/listOrders'),
-//   updateStatus: (data) => api.post('/api/order/updateStatus', data),
-// }
