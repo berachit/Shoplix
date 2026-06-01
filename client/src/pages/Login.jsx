@@ -5,10 +5,12 @@ import { toast } from "sonner";
 import { useGoogleLogin } from "@react-oauth/google";
 import { loginUser, registerUser, googleAuthLogin } from "../utils/api.js";
 import { useAuth } from "../context/AuthContext.jsx";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
   const [mode, setMode] = useState("signin");
   const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,7 +21,7 @@ export default function Login() {
   const from = location.state?.from?.pathname || "/";
   const { login } = useAuth();
 
-    const handleGoogleLogin = useGoogleLogin({
+  const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
         const userInfo = await fetch(
@@ -149,19 +151,49 @@ export default function Login() {
           <input
             type="email"
             name="email"
+            required
             placeholder="Email"
             className="w-full bg-transparent border hairline rounded-xl px-4 py-3 text-sm outline-none focus:border-foreground"
             value={formData.email}
             onChange={handleChange}
           />
-          <input
-            type="password"
+          {/* <input
+            type={showPass ? "text" : "password"}
             name="password"
             placeholder="Password"
             className="w-full bg-transparent border hairline rounded-xl px-4 py-3 text-sm outline-none focus:border-foreground"
             value={formData.password}
             onChange={handleChange}
-          />
+          /> */}
+          <div className="relative">
+            <input
+              type={showPass ? "text" : "password"}
+              required
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-3.5 rounded-xl border text-sm outline-none transition pr-12"
+              style={{
+                backgroundColor: "var(--background)",
+                borderColor: "var(--border)",
+                color: "var(--foreground)",
+              }}
+              onFocus={(e) =>
+                (e.target.style.borderColor = "var(--foreground)")
+              }
+              onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPass(!showPass)}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-0.5 rounded transition hover:opacity-100 opacity-50"
+              style={{ color: "var(--foreground)" }}
+              tabIndex={-1}
+            >
+              {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          </div>
           <button
             type="submit"
             disabled={loading}
