@@ -22,6 +22,8 @@ export default function Login() {
   const { login } = useAuth();
 
   const handleGoogleLogin = useGoogleLogin({
+    flow: "implicit",
+    ux_mode: "redirect",
     onSuccess: async (tokenResponse) => {
       try {
         const userInfo = await fetch(
