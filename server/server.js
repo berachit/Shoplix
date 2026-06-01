@@ -16,7 +16,15 @@ connectCloudinary();
 
 // middlewares
 app.use(express.json()) //auto covert incoming json into JS object
-app.use(cors())
+app.use(
+  cors({
+    origin: [
+      process.env.CLIENT_URL,
+      process.env.FRONTEND_URL
+    ],
+    credentials: true,
+  })
+);
 
 // API endpoints
 app.use("/api/user", userRouter)
