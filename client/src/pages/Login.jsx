@@ -22,8 +22,6 @@ export default function Login() {
   const { login } = useAuth();
 
   const handleGoogleLogin = useGoogleLogin({
-    flow: "implicit",
-    ux_mode: "redirect",
     onSuccess: async (tokenResponse) => {
       try {
         const userInfo = await fetch(
@@ -229,7 +227,10 @@ export default function Login() {
 
       <div className="grid grid-cols-1 gap-3">
         <button
-          onClick={handleGoogleLogin}
+          type="button"
+          onClick={() => {
+            handleGoogleLogin();
+          }}
           className="py-3 rounded-xl border hairline text-sm hover:border-foreground transition flex items-center justify-center gap-2 w-full"
         >
           {/* Google G icon */}
