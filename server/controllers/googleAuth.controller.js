@@ -54,11 +54,11 @@ export const googleAuth = async (req, res) => {
       }
     }
 
-    const token = createToken(user);
+    const authToken = createToken(user);
 
     return res.json({
       success: true,
-      token,
+      token: authToken,
       user: {
         _id: user._id,
         name: user.name,

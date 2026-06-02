@@ -25,7 +25,7 @@ export default function Login() {
     try {
       // Send the encrypted credential token to your backend securely!
       const { data } = await googleAuthLogin({
-        token: credentialResponse.credential, 
+        token: credentialResponse.credential,
       });
 
       if (data.success) {
@@ -203,15 +203,14 @@ export default function Login() {
       </div>
 
       {/* Official, cross-browser compatible Google button */}
-      <div className="w-full flex justify-center GoogleButtonWrapper">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={() => toast.error("Google sign-in was cancelled")}
-          shape="circle"
-          theme="outline"
-          width="384px" // Matches the max-w-md constraint (24rem / 384px)
-        />
-      </div>
+      <GoogleLogin
+        ux_mode="redirect"
+        onSuccess={handleGoogleSuccess}
+        onError={() => toast.error("Google sign-in was cancelled")}
+        shape="circle"
+        theme="outline"
+        width="384px"
+      />
 
       <p className="mt-10 text-center text-xs text-muted-foreground">
         By continuing, you agree to our{" "}
