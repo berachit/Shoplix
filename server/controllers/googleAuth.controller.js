@@ -11,10 +11,14 @@ const createToken = (user) => {
 
 export const googleAuth = async (req, res) => {
   try {
-    const payload =
-      typeof req.body.token === "string"
-        ? await verifyGoogleToken(req.body.token)
-        : req.body;
+    const { token } = req.body;
+
+    if (!token) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Google token is required" });
+    }
+    const payload = await verifyGoogleToken(token);
 
     const { sub, email, name, picture, email_verified } = payload;
 
