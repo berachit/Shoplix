@@ -204,7 +204,6 @@ export default function Login() {
 
       {/* Official, cross-browser compatible Google button */}
       <GoogleLogin
-        ux_mode="redirect"
         onSuccess={handleGoogleSuccess}
         onError={() => toast.error("Google sign-in was cancelled")}
         shape="circle"
